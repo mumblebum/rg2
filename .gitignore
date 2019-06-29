@@ -107,7 +107,7 @@ ipch/
 *.psess
 *.vsp
 *.vspx
-
+.vscode
 # Guidance Automation Toolkit
 *.gpState
 

@@ -11,7 +11,8 @@ module.exports = function (grunt) {
     'js/courses.js', 'js/draw.js', 'js/event.js', 'js/events.js', 'js/gpstrack.js', 'js/handles.js', 'js/map.js', 'js/result.js',
     'js/results.js', 'js/rg2getjson.js', 'js/rg2input.js', 'js/rg2ui.js', 'js/runner.js', 'js/stats.js', 'js/utils.js'];
 
-  var jsManagerSrc = ['js/manager.js', 'js/courseparser.js', 'js/resultparseriofv2.js', 'js/resultparseriofv3.js', 'js/resultparsercsv.js', 'js/resultparser.js', 'js/managerui.js'];
+  var jsManagerSrc = ['js/manager.js', 'js/courseparser.js', 'js/oomcourseparser.js', 'js/resultparseriofv2.js', 'js/resultparseriofv3.js', 'js/resultparsercsv.js',
+    'js/resultparser.js', 'js/managerui.js'];
 
   var jsMinFile = 'js/rg2-<%= pkg.version %>.min.js';
   var jsManagerMinFile = 'js/rg2manager-<%= pkg.version %>.min.js';
