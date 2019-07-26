@@ -16,7 +16,7 @@
     this.mapIndex = rg2.config.INVALID_MAP_ID;
     this.club = null;
     this.comments = null;
-    this.format = rg2.config.FORMAT_NORMAL;
+    this.format = { type: rg2.config.FORMAT_NORMAL, isScore: false, hasResults: true };
     this.newcontrols = new rg2.Controls();
     this.courses = [];
     this.mapping = [];
@@ -155,6 +155,9 @@
       });
       $("#btn-no-results").click(function (evt) {
         self.toggleResultsRequired(evt.target.checked);
+      });
+      $('#btn-score-event').click(function (evt) {
+        self.toggleScoreEvent(evt.target.checked);
       });
       $("#btn-sort-results").click(function (evt) {
         self.toggleSortResults(evt.target.checked);
@@ -333,7 +336,7 @@
       var i;
       // create a dummy result-course mapping
       // to allow display of courses with no results
-      if (this.format === rg2.config.FORMAT_NO_RESULTS) {
+      if (!this.format.hasResults) {
         this.resultCourses.length = 0;
         for (i = 0; i < this.courses.length; i += 1) {
           this.resultCourses.push({ courseid: this.courses[i].courseid, course: this.courses[i].name });
@@ -357,7 +360,7 @@
       if (!this.eventLevel) {
         return 'Event level is not valid.';
       }
-      if (!this.format) {
+      if (!this.format.type) {
         return 'Event format is not valid.';
       }
       if (this.courses.length === 0) {
@@ -366,7 +369,7 @@
         }
       }
       if (this.results.length === 0) {
-        if (this.format !== rg2.config.FORMAT_NO_RESULTS) {
+        if (this.format.hasResults) {
           return 'No results information. Check your results file.';
         }
       }
@@ -443,11 +446,7 @@
       }
       data.locked = $("#chk-read-only").prop("checked");
       data.club = this.club;
-      data.format = this.format;
-      // assume we can just overwrite 1 or 2 at this point
-      if ($('#btn-score-event').prop('checked')) {
-        data.format = rg2.config.FORMAT_SCORE_EVENT;
-      }
+      data.format = this.format.type;
       data.level = this.eventLevel;
       if (this.drawingCourses) {
         this.courses.push(this.drawnCourse);
@@ -456,7 +455,8 @@
       this.setControlLocations();
       this.mapResultsToCourses();
       this.renumberResults();
-      if (data.format === rg2.config.FORMAT_SCORE_EVENT) {
+      // score with no results?
+      if (this.format.type === rg2.config.FORMAT_SCORE) {
         this.extractVariants();
         data.variants = this.variants.slice(0);
       }
@@ -483,6 +483,22 @@
         return true;
       }
       return false;
+    },
+
+    setFormatType: function () {
+      if (this.format.isScore) {
+        if (this.format.hasResults) {
+          this.format.type = rg2.config.FORMAT_SCORE;
+        } else {
+          this.format.type = rg2.config.FORMAT_SCORE_NO_RESULTS;
+        }
+      } else {
+        if (this.format.hasResults) {
+          this.format.type = rg2.config.FORMAT_NORMAL;
+        } else {
+          this.format.type = rg2.config.FORMAT_NORMAL_NO_RESULTS;
+        }
+      }
     },
 
     sortResultItems: function (a, b) {
@@ -1279,15 +1295,17 @@
       this.sortResults = checkedState;
     },
 
-    // determines if a results file is needed
-    // TODO: score events
     toggleResultsRequired: function (noResults) {
-      if (noResults) {
-        this.format = rg2.config.FORMAT_NO_RESULTS;
+      this.format.hasResults = !noResults;
+      this.setFormatType();
+      if (!this.format.hasResults) {
         this.createResultCourseMapping();
-      } else {
-        this.format = rg2.config.FORMAT_NORMAL;
       }
+    },
+
+    toggleScoreEvent: function (isScoreEvent) {
+      this.format.isScore = isScoreEvent;
+      this.setFormatType();
     },
 
     confirmAddMap: function () {

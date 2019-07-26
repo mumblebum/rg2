@@ -6,18 +6,18 @@
   }
 
   Events.prototype = {
-    Constructor : Events,
+    Constructor: Events,
 
-    deleteAllEvents : function () {
+    deleteAllEvents: function () {
       this.events.length = 0;
       this.activeEventID = null;
     },
 
-    addEvent : function (eventObject) {
+    addEvent: function (eventObject) {
       this.events.push(eventObject);
     },
 
-    getEventInfo : function (kartatid) {
+    getEventInfo: function (kartatid) {
       var realid, info;
       kartatid = kartatid || this.getKartatEventID();
       realid = this.getEventIDForKartatID(kartatid);
@@ -27,19 +27,19 @@
       return info;
     },
 
-    getKartatEventID : function () {
+    getKartatEventID: function () {
       return this.events[this.activeEventID].kartatid;
     },
 
-    getActiveMapID : function () {
+    getActiveMapID: function () {
       return this.events[this.activeEventID].mapid;
     },
 
-    getMapFileName : function () {
+    getMapFileName: function () {
       return this.events[this.activeEventID].mapfilename;
     },
 
-    setActiveEventID : function (eventid) {
+    setActiveEventID: function (eventid) {
       if (eventid === null) {
         this.activeEventID = null;
       } else {
@@ -47,11 +47,11 @@
       }
     },
 
-    getActiveEventID : function () {
+    getActiveEventID: function () {
       return this.activeEventID;
     },
 
-    getEventIDForKartatID : function (kartatID) {
+    getEventIDForKartatID: function (kartatID) {
       var i;
       for (i = 0; i < this.events.length; i += 1) {
         if (this.events[i].kartatid === kartatID) {
@@ -61,21 +61,21 @@
       return undefined;
     },
 
-    getActiveEventDate : function () {
+    getActiveEventDate: function () {
       if (this.activeEventID !== null) {
         return this.events[this.activeEventID].date;
       }
       return "";
     },
 
-    getActiveEventName : function () {
+    getActiveEventName: function () {
       if (this.activeEventID !== null) {
         return this.events[this.activeEventID].name;
       }
       return "Routegadget 2";
     },
 
-    getEventEditDropdown : function (dropdown) {
+    getEventEditDropdown: function (dropdown) {
       var i;
       dropdown.options.add(rg2.utils.generateOption(null, 'No event selected'));
       for (i = (this.events.length - 1); i > -1; i -= 1) {
@@ -84,39 +84,43 @@
       return dropdown;
     },
 
-    isScoreEvent : function () {
-      return (this.events[this.activeEventID].format === rg2.config.SCORE_EVENT);
+    isScoreEvent: function () {
+      return (this.events[this.activeEventID].isScoreEvent);
     },
 
-    hasResults : function () {
+    hasResults: function () {
       if (this.activeEventID !== null) {
-        return (this.events[this.activeEventID].format !== rg2.config.EVENT_WITHOUT_RESULTS);
+        if ((this.events[this.activeEventID].format === rg2.config.FORMAT_NORMAL_NO_RESULTS) ||
+          (this.events[this.activeEventID].format === rg2.config.FORMAT_SCORE_NO_RESULTS)) {
+          return false;
+        }
       }
+      // returns true even if we have no active event, but should never be called in that case
       return true;
     },
 
-    mapIsGeoreferenced : function () {
+    mapIsGeoreferenced: function () {
       if (this.activeEventID === null) {
         return false;
       }
       return this.events[this.activeEventID].worldfile.valid;
     },
 
-    eventIsLocked : function () {
+    eventIsLocked: function () {
       if (this.activeEventID === null) {
         return false;
       }
       return this.events[this.activeEventID].locked;
     },
 
-    getLengthUnits : function () {
+    getLengthUnits: function () {
       if ((this.activeEventID === null) || (!this.mapIsGeoreferenced())) {
         return "px";
       }
       return "m";
     },
 
-    getMetresPerPixel : function () {
+    getMetresPerPixel: function () {
       var lat1, lat2, lon1, lon2, size, pixels, w;
       if ((this.activeEventID === null) || (!this.mapIsGeoreferenced())) {
         return undefined;
@@ -131,11 +135,11 @@
       return rg2.utils.getLatLonDistance(lat1, lon1, lat2, lon2) / pixels;
     },
 
-    getWorldFile : function () {
+    getWorldFile: function () {
       return this.events[this.activeEventID].worldfile;
     },
 
-    formatEventsAsMenu : function () {
+    formatEventsAsMenu: function () {
       var title, html, i;
       html = '';
       for (i = this.events.length - 1; i >= 0; i -= 1) {

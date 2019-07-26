@@ -4,29 +4,34 @@
     this.kartatid = data.id;
     this.mapid = data.mapid;
     this.format = data.format;
+    if ((this.format === rg2.config.FORMAT_SCORE) || (this.format === rg2.config.FORMAT_SCORE_NO_RESULTS)) {
+      this.isScoreEvent = true;
+    } else {
+      this.isScoreEvent = false;
+    }
     this.name = data.name;
     this.date = data.date;
     this.club = data.club;
     this.rawtype = data.type;
     switch (data.type) {
-    case "I":
-      this.type = "International event";
-      break;
-    case "N":
-      this.type = "National event";
-      break;
-    case "R":
-      this.type = "Regional event";
-      break;
-    case "L":
-      this.type = "Local event";
-      break;
-    case "T":
-      this.type = "Training event";
-      break;
-    default:
-      this.type = "Unknown";
-      break;
+      case "I":
+        this.type = "International event";
+        break;
+      case "N":
+        this.type = "National event";
+        break;
+      case "R":
+        this.type = "Regional event";
+        break;
+      case "L":
+        this.type = "Local event";
+        break;
+      case "T":
+        this.type = "Training event";
+        break;
+      default:
+        this.type = "Unknown";
+        break;
     }
     this.comment = data.comment;
     this.locked = data.locked;
@@ -36,9 +41,9 @@
 
 
   Event.prototype = {
-    Constructor : Event,
+    Constructor: Event,
 
-    setMapDetails : function (data) {
+    setMapDetails: function (data) {
       if (data.suffix === undefined) {
         this.mapfilename = this.mapid + '.' + 'jpg';
       } else {
