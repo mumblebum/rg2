@@ -110,11 +110,11 @@
       for (x = 0; x < splitlist.length; x += 1) {
         // only possible attributes are "Missing" and "Additional" so
         // if splitlist has attributes it is invalid and needs to be ignored
-        if (splitlist[x].attributes.length === 0) {
+        //if (splitlist[x].attributes.length === 0) {
           result.splits += rg2.utils.extractTextContentZero(splitlist[x].getElementsByTagName('Time'), 0);
           codes.push(rg2.utils.extractTextContentZero(splitlist[x].getElementsByTagName('ControlCode'), 'X' + x));
           result.splits += ";";
-        }
+        //}
       }
       result.codes = codes;
       result.controls = result.codes.length;
